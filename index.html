@@ -170,7 +170,7 @@
         ];
 
         // Function to populate time slots in the UI
-        function populateTimeSlots() {
+        function populateTimeSlots(form) {
             const timeSlotsContainer = document.getElementById('time-slots');
             timeSlotsContainer.innerHTML = ''; // Clear existing slots
             availableSlots.forEach(slot => {
@@ -192,7 +192,6 @@
                     button.classList.remove('bg-white', 'text-[#0077b6]');
                     button.classList.add('bg-[#0077b6]', 'text-white');
                     // Store the selected time slot in a hidden input or data attribute
-                    const form = document.getElementById('booking-form');
                     form.dataset.selectedTime = slot;
                 });
                 timeSlotsContainer.appendChild(button);
@@ -245,8 +244,9 @@
             link.remove();
         }
 
-        // Add event listeners to be executed after Firebase is initialized
-        function setupEventListeners() {
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeFirebase();
+            
             const form = document.getElementById('booking-form');
             const downloadButton = document.getElementById('download-button');
             const adminPasswordInput = document.getElementById('admin-password');
@@ -255,6 +255,8 @@
             const confirmationMessage = document.getElementById('confirmation-message');
             const confirmationBox = document.getElementById('confirmation-box');
 
+            populateTimeSlots(form);
+            
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
@@ -328,13 +330,7 @@
                     document.body.appendChild(customAlert);
                 }
             });
-        }
-        
-        window.onload = async () => {
-            await initializeFirebase();
-            populateTimeSlots();
-            setupEventListeners();
-        };
+        });
     </script>
 </body>
 </html>
